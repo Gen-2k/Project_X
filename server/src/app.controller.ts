@@ -10,15 +10,4 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  // GET route: http://localhost:3000/users
-  @Get('users')
-  getUsers() {
-    return this.appService.getUsers();
-  }
-
-  // POST route to test adding a user
-  @Post('users')
-  createUser(@Body() body: { email: string; name?: string }) {
-    return this.appService.createUser(body.email, body.name);
-  }
 }
