@@ -1,26 +1,23 @@
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { UsersService } from '@modules/users/users.service';
+import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
-import { RegisterDto } from './dto/register.dto';
+
+import { UserDto } from './dto/auth-response.dto';
 import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
+import { PasswordService } from './password.service';
 
 export interface AuthResponse {
   access_token: string;
-  user: {
-    id: string;
-    email: string;
-    name: string | null;
-  };
+  user: UserDto;
 }
 
 @Injectable()
 export class AuthService {
-  private readonly DUMMY_HASH = bcrypt.hashSync('dummy', 10);
-
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private passwordService: PasswordService,
   ) {}
 
   async register(registerDto: RegisterDto): Promise<AuthResponse> {
@@ -29,8 +26,7 @@ export class AuthService {
       throw new ConflictException('Email already exists');
     }
 
-    const salt = await bcrypt.genSalt();
-    const passwordHash = await bcrypt.hash(registerDto.password, salt);
+    const passwordHash = await this.passwordService.hashPassword(registerDto.password);
 
     const user = await this.usersService.create({
       email: registerDto.email,
@@ -44,11 +40,14 @@ export class AuthService {
   async login(loginDto: LoginDto): Promise<AuthResponse> {
     const user = await this.usersService.findOne(loginDto.email);
     if (!user) {
-      await bcrypt.compare(loginDto.password, this.DUMMY_HASH); // mitigate timing attack
+      await this.passwordService.mitigateTimingAttack(loginDto.password); // mitigate timing attack
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const isMatch = await bcrypt.compare(loginDto.password, user.passwordHash);
+    const isMatch = await this.passwordService.comparePassword(
+      loginDto.password,
+      user.passwordHash,
+    );
     if (!isMatch) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -56,7 +55,23 @@ export class AuthService {
     return this.generateAuthResponse(user);
   }
 
-  private generateAuthResponse(user: { id: string; email: string; name: string | null }): AuthResponse {
+  async getProfile(userId: string): Promise<UserDto> {
+    const user = await this.usersService.findById(userId);
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+    };
+  }
+
+  private generateAuthResponse(user: {
+    id: string;
+    email: string;
+    name: string | null;
+  }): AuthResponse {
     const payload = { sub: user.id, email: user.email };
     return {
       access_token: this.jwtService.sign(payload),
