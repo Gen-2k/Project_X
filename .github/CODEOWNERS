@@ -1,0 +1,17 @@
+# Monorepo Codeownership Definition
+*       @team-lead @architecture-team
+
+# Workspace Configurations
+/package.json         @platform-team
+/pnpm-workspace.yaml  @platform-team
+/turbo.json           @platform-team
+/tsconfig.json        @platform-team
+
+# Applications
+/apps/client/         @frontend-team
+/apps/server/         @backend-team
+
+# Shared Infrastructure & Configs
+/packages/database/   @backend-team @database-team
+/packages/shared/     @architecture-team
+/packages/config-*/   @platform-team

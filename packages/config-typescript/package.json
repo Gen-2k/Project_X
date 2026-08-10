@@ -1,0 +1,10 @@
+{
+  "name": "@project/typescript-config",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.9",
+    "@tsconfig/strictest": "^2.0.8",
+    "@tsconfig/vite-react": "^8.1.1"
+  }
+}

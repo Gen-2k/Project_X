@@ -1,0 +1,16 @@
+# Build outputs  
+dist  
+build  
+.next  
+  
+# Generated files  
+apps/server/src/generated  
+  
+# Turbo cache  
+.turbo  
+  
+# Dependencies  
+node_modules  
+  
+# Lock files  
+pnpm-lock.yaml 

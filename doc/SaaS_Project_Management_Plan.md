@@ -1,4 +1,5 @@
 # Comprehensive Product Requirements & Development Plan
+
 ## SaaS Project Management Platform (Linear/Jira Clone)
 
 This document serves as the single source of truth for the project, detailing the architecture, database schema, API endpoints, frontend views, and a granular phase-by-phase feature breakdown.
@@ -6,12 +7,13 @@ This document serves as the single source of truth for the project, detailing th
 ---
 
 ## 1. System Architecture & Tech Stack Details
+
 - **Frontend Workspace (`/client`)**
   - **Core:** React (Vite), TypeScript
   - **Routing:** React Router v6
   - **UI Components:** Shadcn UI (Tailwind + Radix primitives)
   - **Forms:** `react-hook-form` + `zod`
-  - **State Management:** 
+  - **State Management:**
     - Server State: `@tanstack/react-query` (Caching, Optimistic UI updates)
     - Client State: `zustand` (User session, Theme preferences, Active workspace)
   - **Drag and Drop:** `@dnd-kit/core`
@@ -38,7 +40,7 @@ model User {
   name           String
   avatarUrl      String?
   createdAt      DateTime    @default(now())
-  
+
   // Relations
   ownedWorkspaces Workspace[] @relation("WorkspaceOwner")
   memberships     WorkspaceMember[]
@@ -76,7 +78,7 @@ model Project {
   name        String
   key         String    @unique // e.g., "ENG", "MKT" (used for task prefixes like ENG-12)
   workspaceId String
-  
+
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   tasks       Task[]
 }
@@ -88,7 +90,7 @@ model Task {
   description String?
   status      Status    @default(TODO) // Enum: BACKLOG, TODO, IN_PROGRESS, REVIEW, DONE
   priority    Priority  @default(MEDIUM) // Enum: LOW, MEDIUM, HIGH, URGENT
-  
+
   projectId   String
   assigneeId  String?
 
@@ -115,15 +117,18 @@ model Comment {
 ## 3. Core API Architecture (REST & GraphQL)
 
 ### REST Endpoints (Auth & File Uploads)
+
 - `POST /auth/register` - Create new user
 - `POST /auth/login` - Authenticate and return JWT
 - `GET /auth/me` - Get current user profile (JWT required)
 - `POST /upload` - Handle file attachments
 
 ### GraphQL API (NestJS Code-First)
+
 The core data layer uses GraphQL for flexible, deeply-nested data fetching and mutations.
 
 #### Queries (Fetching Data)
+
 - `workspaces` - List workspaces user belongs to
 - `workspace(id)` - Get workspace details, nested projects, and members
 - `projects(workspaceId)` - List all projects in a workspace
@@ -132,6 +137,7 @@ The core data layer uses GraphQL for flexible, deeply-nested data fetching and m
 - `task(id)` - Get detailed task info, comments, and history
 
 #### Mutations (Modifying Data)
+
 - `createWorkspace(...)`
 - `inviteMember(workspaceId, email, role)`
 - `createProject(...)`
@@ -141,6 +147,7 @@ The core data layer uses GraphQL for flexible, deeply-nested data fetching and m
 - `addComment(taskId, content)`
 
 #### Subscriptions (Real-time)
+
 - `taskUpdated(projectId)` - Pushes delta updates when a task changes status/assignee to keep the Kanban board in sync live.
 
 ---
@@ -148,12 +155,14 @@ The core data layer uses GraphQL for flexible, deeply-nested data fetching and m
 ## 4. Frontend Architecture & Views
 
 ### Public Routes
+
 - **`/login`**: JWT Authentication form.
 - **`/register`**: Account creation form.
 
 ### Protected Routes (Requires Auth)
+
 - **`/` (Dashboard)**: Lists recent Workspaces and assigned tasks across all projects.
-- **`/:workspaceId`**: 
+- **`/:workspaceId`**:
   - Sidebar: Shows all Projects in the Workspace, Members list.
   - Main Area: Activity feed or Workspace settings.
 - **`/:workspaceId/projects/:projectId` (The Core View)**:
@@ -167,7 +176,9 @@ The core data layer uses GraphQL for flexible, deeply-nested data fetching and m
 ## 5. Granular Phase-by-Phase Execution Plan
 
 ### Phase 1: Foundation & Security
-*Focus: Getting the servers talking, database connected, and users secured.*
+
+_Focus: Getting the servers talking, database connected, and users secured._
+
 - [ ] Initialize PostgreSQL database and apply Prisma schema.
 - [ ] Setup NestJS Validation Pipes globally.
 - [ ] Implement REST AuthController and AuthService.
@@ -178,7 +189,9 @@ The core data layer uses GraphQL for flexible, deeply-nested data fetching and m
 - [ ] Frontend: Build Login/Register screens and store JWT securely.
 
 ### Phase 2: Multi-Tenancy (Workspaces & Projects)
-*Focus: Organizing data so users only see what belongs to them.*
+
+_Focus: Organizing data so users only see what belongs to them._
+
 - [ ] Build Workspace GraphQL Resolvers (Queries & Mutations).
 - [ ] Implement GraphQL RBAC Guard: Protect queries/mutations based on `WorkspaceMember` roles.
 - [ ] Build Project GraphQL Resolvers.
@@ -186,20 +199,25 @@ The core data layer uses GraphQL for flexible, deeply-nested data fetching and m
 - [ ] Frontend: Build Workspace creation modal and Dashboard lists.
 
 ### Phase 3: The Engine (Task Management & Kanban)
-*Focus: The heavy lifting of the UI and complex state management.*
+
+_Focus: The heavy lifting of the UI and complex state management._
+
 - [ ] Build Task GraphQL Resolvers.
 - [ ] Frontend: Implement GraphQL queries for fetching tasks efficiently (avoiding N+1).
 - [ ] Frontend: Build the Kanban Board UI using `@dnd-kit/core`.
 - [ ] Frontend: Implement Drag-and-Drop logic.
-  - *Crucial detail:* Implement **Optimistic Updates** in the client cache (Apollo or React Query). When a user drops a card, update the UI state instantly, send the `updateTask` mutation to the server, and rollback if it fails.
+  - _Crucial detail:_ Implement **Optimistic Updates** in the client cache (Apollo or React Query). When a user drops a card, update the UI state instantly, send the `updateTask` mutation to the server, and rollback if it fails.
 
 ### Phase 4: Collaboration & Depth
-*Focus: Making it a real product.*
+
+_Focus: Making it a real product._
+
 - [ ] Task Modal: Build the detailed view for a single task.
 - [ ] Comments: Build the backend API and frontend UI for commenting on tasks.
 - [ ] Task Filtering: Build client-side filtering (e.g., clicking "My Issues" filters the board).
 - [ ] Member Management: Allow Workspace Owners to add new users via email to their workspace.
 
 ### Phase 5: Future AI & Pro Features
+
 - [ ] **AI Task Breakdown:** Send a task description to OpenAI to generate an array of sub-tasks, then bulk-create those sub-tasks.
 - [ ] **Real-time Engine:** Implement GraphQL Subscriptions (`taskUpdated`) via WebSockets so team members see cards moving live on the Kanban board without manual refresh.
