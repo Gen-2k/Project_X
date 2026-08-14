@@ -125,8 +125,8 @@ jobs:
         run: pnpm db:generate
       - name: Apply database migrations
         run: pnpm --filter @project/database exec prisma migrate deploy
-      - name: Run E2E Test Suite (Turborepo)
-        run: pnpm exec turbo run test:e2e
+      - name: Run E2E Test Suite
+        run: pnpm --filter @project/server run test:e2e
 
   build:
     name: Build Verification
