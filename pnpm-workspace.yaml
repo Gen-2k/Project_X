@@ -8,3 +8,5 @@ allowBuilds:
   esbuild: true
   prisma: true
   unrs-resolver: true
+overrides:
+  js-yaml: '>=5.2.2'
