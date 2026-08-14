@@ -1,5 +1,4 @@
-# Syntax: docker/dockerfile:1.4
-FROM node:20-alpine AS alpine
+FROM node:22-alpine AS alpine
 
 # Set up pnpm on the alpine base
 ENV PNPM_HOME="/pnpm"
