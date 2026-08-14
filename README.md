@@ -1,6 +1,8 @@
 # Project X — Enterprise Monorepo Architecture
 
-![Node.js](https://img.shields.io/badge/Node.js-20+-green.svg)
+[![CI Pipeline](https://github.com/Gen-2k/Project_X/actions/workflows/pr.yml/badge.svg)](https://github.com/Gen-2k/Project_X/actions/workflows/pr.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Node.js](https://img.shields.io/badge/Node.js-22+-green.svg)
 ![pnpm](https://img.shields.io/badge/pnpm-11.x-blue.svg)
 ![Turborepo](https://img.shields.io/badge/Turborepo-2.x-red.svg)
 ![React](https://img.shields.io/badge/React-19.x-cyan.svg)
@@ -32,7 +34,7 @@ Project_X/
 
 ### Prerequisites
 
-- **Node.js**: `>= 20.0.0`
+- **Node.js**: `>= 22.13.0`
 - **pnpm**: `>= 11.0.0`
 - **Docker Desktop** (for PostgreSQL database)
 
@@ -40,7 +42,7 @@ Project_X/
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/Gen-2k/Project_X.git
 cd Project_X
 
 # Install workspace dependencies cleanly
@@ -54,7 +56,7 @@ pnpm db:generate
 
 ```bash
 # Start PostgreSQL via Docker Compose
-docker-compose up postgres -d
+docker compose up postgres -d
 
 # Start client & server applications in development mode (hot-reloading)
 pnpm dev
@@ -64,6 +66,7 @@ The applications will be accessible at:
 
 - **Client App**: [http://localhost:5173](http://localhost:5173)
 - **Server API**: [http://localhost:3000/api/v1](http://localhost:3000/api/v1)
+- **Swagger API Docs**: [http://localhost:3000/api/v1/docs](http://localhost:3000/api/v1/docs)
 
 ---
 
@@ -99,6 +102,7 @@ pnpm test
 
 - **Commit Messages**: Enforced via **Husky** and **Commitlint** adhering to [Conventional Commits](https://www.conventionalcommits.org/).
 - **Pre-commit Formatting**: Automatically triggers **lint-staged** to format staged files via Prettier and ESLint.
+- **Continuous Integration**: 7 automated quality gates on GitHub Actions (Lint, Format, Audit, Typecheck, Test, E2E Postgres, Build).
 
 ---
 
@@ -106,3 +110,6 @@ pnpm test
 
 - [CONTRIBUTING.md](./CONTRIBUTING.md) — Git workflow, branch strategy, and contribution guidelines.
 - [ARCHITECTURE.md](./ARCHITECTURE.md) — Technical design, package boundaries, and data flows.
+- [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) — Community pledge and standards.
+- [SECURITY.md](./SECURITY.md) — Security policy and vulnerability disclosure.
+- [LICENSE](./LICENSE) — MIT License.
