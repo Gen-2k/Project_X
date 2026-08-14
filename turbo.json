@@ -18,6 +18,7 @@
       "inputs": ["src/**", "test/**", "tests/**"]
     },
     "lint": {
+      "dependsOn": ["^build", "db:generate"],
       "inputs": ["src/**", ".eslintrc*", "eslint.config.*"]
     },
     "format": {},

@@ -19,6 +19,8 @@ jobs:
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Generate Prisma Client
+        run: pnpm db:generate
       - name: Run ESLint (Turborepo)
         run: pnpm exec turbo run lint
 
@@ -119,6 +121,8 @@ jobs:
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Generate Prisma Client
+        run: pnpm db:generate
       - name: Apply database migrations
         run: pnpm --filter @project/database exec prisma migrate deploy
       - name: Run E2E Test Suite (Turborepo)
