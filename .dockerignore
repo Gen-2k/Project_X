@@ -1,0 +1,33 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build outputs & caches
+dist
+build
+.next
+out
+.out
+*.tsbuildinfo
+stats.html
+.turbo
+
+# Testing & Coverage
+coverage
+.nyc_output
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.example
+
+# Version Control & IDE
+.git
+.gitignore
+.vscode
+.idea
+*.log

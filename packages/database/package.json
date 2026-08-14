@@ -16,6 +16,7 @@
   "devDependencies": {
     "@project/eslint-config": "workspace:*",
     "@project/typescript-config": "workspace:*",
+    "dotenv": "^16.4.7",
     "eslint": "^9.18.0",
     "prisma": "7.9.1",
     "typescript": "^5.7.3",

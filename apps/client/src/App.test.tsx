@@ -1,23 +1,28 @@
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import App from './App';
 
 describe('App Component', () => {
-  it('renders heading and main layout', () => {
-    render(<App />);
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Get started');
+  beforeEach(() => {
+    vi.clearAllMocks();
+    // Default fetch mock returning 401 unauthenticated for session check
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: false,
+      status: 401,
+      headers: {
+        get: () => 'application/json',
+      },
+      json: () => Promise.resolve({ message: 'Unauthorized' }),
+    });
   });
 
-  it('increments counter on button click', async () => {
-    const user = userEvent.setup();
+  it('renders application and redirects unauthenticated user to login', async () => {
     render(<App />);
 
-    const button = screen.getByRole('button', { name: /count is 0/i });
-    expect(button).toBeInTheDocument();
-
-    await user.click(button);
-    expect(screen.getByRole('button', { name: /count is 1/i })).toBeInTheDocument();
+    // Unauthenticated user is redirected to login page
+    expect(await screen.findByRole('heading', { name: /welcome back/i })).toBeInTheDocument();
+    expect(screen.getByLabelText(/email address/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument();
   });
 });

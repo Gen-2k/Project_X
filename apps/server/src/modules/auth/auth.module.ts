@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
 import { UsersModule } from '../users/users.module';
@@ -15,14 +15,15 @@ import { PasswordService } from './password.service';
     PassportModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
+      useFactory: (configService: ConfigService): JwtModuleOptions => {
         // JWT_SECRET and JWT_EXPIRES_IN are guaranteed to exist by Zod env validation in AppModule.
         const secret = configService.get<string>('JWT_SECRET')!;
         const expiresIn = configService.get<string>('JWT_EXPIRES_IN')!;
         return {
           secret,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-          signOptions: { expiresIn: expiresIn as any },
+          signOptions: {
+            expiresIn: (expiresIn || '1d') as '1d',
+          },
         };
       },
     }),

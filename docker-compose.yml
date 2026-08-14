@@ -28,11 +28,15 @@ services:
       - DATABASE_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD:?DB_PASSWORD is required}@postgres:5432/${DB_NAME:-project_x}?schema=public
       - JWT_SECRET=${JWT_SECRET:?JWT_SECRET is required}
       - JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-1d}
+      - COOKIE_SECURE=${COOKIE_SECURE:-false}
     depends_on:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ['CMD-SHELL', 'wget -qO- http://localhost:3000/api/v1/health || exit 1']
+      # Exit non-zero unless the terminus health endpoint reports "ok"
+      # (busybox wget exits 0 on any HTTP status, including 503).
+      test:
+        ['CMD-SHELL', 'wget -qO- http://localhost:3000/api/v1/health | grep -q "\"status\":\"ok\""']
       interval: 10s
       timeout: 5s
       retries: 3
@@ -42,7 +46,8 @@ services:
       context: .
       dockerfile: apps/client/Dockerfile
     ports:
-      - '80:80'
+      # Host 80 -> container 8080 (the unprivileged nginx bind port)
+      - '80:8080'
     depends_on:
       server:
         condition: service_healthy

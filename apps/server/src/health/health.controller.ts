@@ -1,4 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   HealthCheck,
   HealthCheckResult,
@@ -9,6 +10,7 @@ import {
 
 import { PrismaService } from '../database/prisma.service';
 
+@ApiTags('health')
 @Controller('health')
 export class HealthController {
   constructor(
@@ -19,6 +21,9 @@ export class HealthController {
 
   @Get()
   @HealthCheck()
+  @ApiOperation({ summary: 'Check API and database health status' })
+  @ApiResponse({ status: 200, description: 'Application and dependencies are healthy' })
+  @ApiResponse({ status: 503, description: 'Health check failed' })
   check(): Promise<HealthCheckResult> {
     return this.health.check([
       (): Promise<HealthIndicatorResult> => this.db.pingCheck('database', this.prismaService),

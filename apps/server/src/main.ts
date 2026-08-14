@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { Logger } from 'nestjs-pino';
@@ -43,6 +44,16 @@ async function bootstrap(): Promise<void> {
   const httpAdapterHost = app.get(HttpAdapterHost);
   const logger = app.get(Logger);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapterHost, logger));
+
+  // OpenAPI Documentation
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('Project X API')
+    .setDescription('Production-grade REST API for Project X SaaS platform')
+    .setVersion('1.0.0')
+    .addBearerAuth()
+    .build();
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('api/v1/docs', app, document);
 
   // Graceful Shutdown
   app.enableShutdownHooks();

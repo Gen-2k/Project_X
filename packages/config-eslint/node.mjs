@@ -11,5 +11,3 @@ export const nodeConfig = tseslint.config(...baseConfig, {
     sourceType: 'commonjs',
   },
 });
-
-export default nodeConfig;

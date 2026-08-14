@@ -3,10 +3,18 @@ module.exports = {
   rootDir: 'src',
   testRegex: '.*\\.spec\\.ts$',
   transform: {
-    '^.+\\.(t|j)s$': 'ts-jest',
+    '^.+\\.ts$': 'ts-jest',
   },
-  collectCoverageFrom: ['**/*.(t|j)s'],
+  collectCoverageFrom: ['**/*.(t|j)s', '!main.ts', '!**/*.module.ts', '!**/*.dto.ts'],
   coverageDirectory: '../coverage',
+  coverageThreshold: {
+    global: {
+      statements: 85,
+      branches: 70,
+      functions: 85,
+      lines: 85,
+    },
+  },
   testEnvironment: 'node',
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',

@@ -17,5 +17,3 @@ export const reactConfig = tseslint.config(...baseConfig, {
     'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
   },
 });
-
-export default reactConfig;

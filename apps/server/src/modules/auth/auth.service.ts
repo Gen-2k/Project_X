@@ -1,6 +1,7 @@
 import { UsersService } from '@modules/users/users.service';
 import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { Prisma } from '@project/database';
 import { LoginDto, RegisterDto, UserDto } from '@project/shared';
 
 import { PasswordService } from './password.service';
@@ -26,13 +27,21 @@ export class AuthService {
 
     const passwordHash = await this.passwordService.hashPassword(registerDto.password);
 
-    const user = await this.usersService.create({
-      email: registerDto.email,
-      name: registerDto.name,
-      passwordHash,
-    });
-
-    return this.generateAuthResponse(user);
+    try {
+      const user = await this.usersService.create({
+        email: registerDto.email,
+        name: registerDto.name,
+        passwordHash,
+      });
+      return this.generateAuthResponse(user);
+    } catch (error) {
+      // Two concurrent registrations can both pass the findOne check above;
+      // the unique email constraint then wins, and it should surface as 409.
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw new ConflictException('Email already exists');
+      }
+      throw error;
+    }
   }
 
   async login(loginDto: LoginDto): Promise<AuthResponse> {

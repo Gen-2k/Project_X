@@ -1,4 +1,6 @@
-import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MinLength, Validate } from 'class-validator';
+
+import { MaxBcryptBytes } from './password.validator';
 
 export class LoginDto {
   @IsEmail()
@@ -7,6 +9,6 @@ export class LoginDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(6, { message: 'Password must be at least 6 characters long' })
-  @MaxLength(72, { message: 'Password must not exceed 72 characters' })
+  @Validate(MaxBcryptBytes)
   password!: string;
 }

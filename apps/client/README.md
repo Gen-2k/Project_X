@@ -1,73 +1,84 @@
-# React + TypeScript + Vite
+# @project/client — React Frontend Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Modern Single Page Application (SPA) for Project X, built with **React 19**, **Vite**, **TypeScript**, **React Router v7**, and **TanStack Query**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🏛 Architecture Overview
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```
+apps/client/src/
+├── components/
+│   ├── Navbar.tsx             # Application navigation & session status
+│   ├── ProtectedRoute.tsx     # Guard ensuring user authentication
+│   └── PublicRoute.tsx        # Redirects authenticated users from login
+├── context/
+│   └── AuthContext.tsx        # Session state provider (HTTP-only cookie transport)
+├── hooks/
+│   └── useAuth.ts             # Typed consumer hook for AuthContext
+├── layouts/
+│   ├── AuthLayout.tsx         # Centered branded layout for login/register
+│   └── DashboardLayout.tsx    # App shell with navbar and main container
+├── lib/
+│   └── api-client.ts          # Centralized fetch wrapper with credentials
+├── pages/
+│   ├── DashboardPage.tsx      # Authenticated landing view & roadmap
+│   ├── LoginPage.tsx          # Accessible sign-in form
+│   └── RegisterPage.tsx       # Account registration form
+├── App.tsx                    # QueryClient & Router definition
+├── index.css                  # Core design tokens & typography
+└── main.tsx                   # React 19 root mount
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+## 🧭 Routing Matrix
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+| Route       | Component          | Access Control | Description                     |
+| :---------- | :----------------- | :------------- | :------------------------------ |
+| `/login`    | `LoginPage`        | Public Only    | Sign in with email & password   |
+| `/register` | `RegisterPage`     | Public Only    | Create a new user account       |
+| `/`         | `DashboardPage`    | Protected      | Authenticated session dashboard |
+| `*`         | `Navigate to="/" ` | Fallback       | Catch-all redirect              |
+
+---
+
+## 🔐 State Management & Authentication
+
+- **Server State**: Managed by **TanStack Query** (`@tanstack/react-query`) with automatic background refetching and caching.
+- **Client Session**: Handled via `AuthContext` and `apiClient`. Cookies are transferred transparently using `credentials: 'include'`.
+- On initial mount, `AuthContext` calls `GET /api/v1/auth/me` to automatically restore active sessions without storing tokens in vulnerable `localStorage`.
+
+---
+
+## 🧪 Testing Strategy
+
+- **Vitest 3** + **React Testing Library** + **jsdom**:
+  ```bash
+  pnpm --filter @project/client run test
+  ```
+- **Interactive Watch Mode**:
+  ```bash
+  pnpm --filter @project/client run test:watch
+  ```
+
+---
+
+## 🚀 Local Development & Production Build
+
+```bash
+# Start development server on port 5173
+pnpm --filter @project/client run dev
+
+# Compile TypeScript & production bundle
+pnpm --filter @project/client run build
+
+# Preview production build locally
+pnpm --filter @project/client run preview
 ```
+
+---
+
+## 🐳 Containerization
+
+In production containers, the client is served via `nginxinc/nginx-unprivileged:alpine` on unprivileged port `8080` with SPA fallback routing configured in `nginx.conf`.

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
@@ -22,6 +22,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   validate(payload: { sub: string; email: string }): { id: string; email: string } {
+    // A token can be validly signed yet lack the sub claim; treat that as
+    // an authentication failure instead of letting id=undefined through.
+    if (typeof payload.sub !== 'string' || payload.sub.length === 0) {
+      throw new UnauthorizedException('Invalid token payload');
+    }
     return { id: payload.sub, email: payload.email };
   }
 }

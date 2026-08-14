@@ -1,22 +1,9 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  "ignore": ["**/generated/**", "**/dist/**"],
+  "ignoreDependencies": ["pino-pretty"],
   "workspaces": {
-    "apps/client": {
-      "entry": ["src/main.tsx", "vite.config.ts"],
-      "project": ["src/**/*.{ts,tsx}"]
-    },
     "apps/server": {
-      "entry": ["src/main.ts"],
-      "project": ["src/**/*.ts", "test/**/*.ts"]
-    },
-    "packages/shared": {
-      "entry": ["src/index.ts"],
-      "project": ["src/**/*.ts"]
-    },
-    "packages/database": {
-      "entry": ["src/index.ts"],
-      "project": ["src/**/*.ts"]
+      "entry": ["src/main.ts", "test/**/*.ts"]
     }
   }
 }
