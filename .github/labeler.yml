@@ -1,0 +1,23 @@
+client:
+  - changed-files:
+      - any-glob-to-any-file: apps/client/**
+
+server:
+  - changed-files:
+      - any-glob-to-any-file: apps/server/**
+
+database:
+  - changed-files:
+      - any-glob-to-any-file: packages/database/**
+
+shared:
+  - changed-files:
+      - any-glob-to-any-file: packages/shared/**
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file: .github/workflows/*
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file: '**/*.md'
