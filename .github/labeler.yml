@@ -1,12 +1,23 @@
 client:
-  - apps/client/**
+  - changed-files:
+      - any-glob-to-any-file: apps/client/**
+
 server:
-  - apps/server/**
+  - changed-files:
+      - any-glob-to-any-file: apps/server/**
+
 database:
-  - packages/database/**
+  - changed-files:
+      - any-glob-to-any-file: packages/database/**
+
 shared:
-  - packages/shared/**
+  - changed-files:
+      - any-glob-to-any-file: packages/shared/**
+
 ci:
-  - .github/workflows/**
+  - changed-files:
+      - any-glob-to-any-file: .github/workflows/*
+
 documentation:
-  - '**/*.md'
+  - changed-files:
+      - any-glob-to-any-file: '**/*.md'
