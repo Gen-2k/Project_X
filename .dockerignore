@@ -25,9 +25,10 @@ coverage
 .env.production.local
 !.env.example
 
-# Version Control & IDE
+# Version Control, CI & IDE
 .git
 .gitignore
+.github
 .vscode
 .idea
 *.log

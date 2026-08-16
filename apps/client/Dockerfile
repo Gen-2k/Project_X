@@ -8,7 +8,7 @@ RUN corepack enable
 FROM alpine AS builder
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
-RUN pnpm add -g turbo
+RUN pnpm add -g turbo@2.10.9
 COPY . .
 RUN turbo prune @project/client --docker
 

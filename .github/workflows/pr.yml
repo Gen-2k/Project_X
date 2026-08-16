@@ -44,11 +44,8 @@ jobs:
       - name: Check for unused code and dependencies (Knip)
         run: pnpm analyze
 
-      - name: Run lint, typecheck, unit tests, and build (Turborepo)
+      - name: Run lint, typecheck, unit tests (with coverage), and build (Turborepo)
         run: pnpm exec turbo run lint typecheck test build
-
-      - name: Check server coverage thresholds
-        run: pnpm --filter @project/server run test:cov
 
   test-e2e:
     name: End-to-End Tests
