@@ -106,6 +106,12 @@ pnpm test
 
 ---
 
+## Contributors
+
+- Surya
+
+---
+
 ## 📄 Documentation
 
 - [CONTRIBUTING.md](./CONTRIBUTING.md) — Git workflow, branch strategy, and contribution guidelines.
