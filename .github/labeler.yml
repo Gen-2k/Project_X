@@ -16,7 +16,7 @@ shared:
 
 ci:
   - changed-files:
-      - any-glob-to-any-file: .github/workflows/*
+      - any-glob-to-any-file: .github/**
 
 documentation:
   - changed-files:
