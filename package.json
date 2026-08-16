@@ -18,7 +18,8 @@
     "lint": "turbo run lint",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
-    "prepare": "husky"
+    "prepare": "husky",
+    "release": "node scripts/release.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "^3.0.0",
