@@ -102,20 +102,21 @@ pnpm test
 
 - **Commit Messages**: Enforced via **Husky** and **Commitlint** adhering to [Conventional Commits](https://www.conventionalcommits.org/).
 - **Pre-commit Formatting**: Automatically triggers **lint-staged** to format staged files via Prettier and ESLint.
-- **Continuous Integration**: 7 automated quality gates on GitHub Actions (Lint, Format, Audit, Typecheck, Test, E2E Postgres, Build).
+- **Continuous Integration & Delivery**: Automated pipeline on GitHub Actions (Prettier format verification, Dependency Security Audit, Knip dead-code analysis, Turborepo lint/typecheck/test/build, Postgres 15 E2E tests, Multi-stage Docker verification, Semantic PR validation, automated Changeset releases, and GHCR container publishing).
 
 ---
 
-## Contributors
+## 👤 Author & Owner
 
-- Surya
+- **Surya** ([@Gen-2k](https://github.com/Gen-2k)) — Project Owner & Lead Architect
 
 ---
 
 ## 📄 Documentation
 
-- [CONTRIBUTING.md](./CONTRIBUTING.md) — Git workflow, branch strategy, and contribution guidelines.
-- [ARCHITECTURE.md](./ARCHITECTURE.md) — Technical design, package boundaries, and data flows.
+- [CONTRIBUTING.md](./CONTRIBUTING.md) — Git workflow, Conventional Commits, quality gates, and Changesets.
+- [SECURITY.md](./SECURITY.md) — Security policy and responsible vulnerability disclosure.
 - [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) — Community pledge and standards.
-- [SECURITY.md](./SECURITY.md) — Security policy and vulnerability disclosure.
 - [LICENSE](./LICENSE) — MIT License.
+- [ADR 0001: Monorepo Structure](./docs/adr/0001-monorepo-structure.md) — Architectural decision record for workspace boundaries.
+- [SaaS Project Specification](./docs/specs/SaaS_Project_Management_Plan.md) — Product requirements and development roadmap.

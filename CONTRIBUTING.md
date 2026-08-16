@@ -60,4 +60,17 @@ pnpm test
 
 # 4. Check formatting
 pnpm format
+
+# 5. Check for unused code and dead dependencies
+pnpm analyze
+```
+
+---
+
+## 📦 Changesets & Versioning
+
+For user-facing changes or package modifications, add a changeset before opening your PR:
+
+```bash
+pnpm changeset
 ```
