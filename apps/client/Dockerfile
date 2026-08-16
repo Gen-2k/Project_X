@@ -1,7 +1,7 @@
 FROM node:22-alpine AS alpine
 
 ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
+ENV PATH="$PNPM_HOME/bin:$PATH"
 RUN corepack enable
 
 # 1. Prune the monorepo for the client
