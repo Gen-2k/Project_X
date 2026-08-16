@@ -118,5 +118,3 @@ pnpm test
 - [SECURITY.md](./SECURITY.md) — Security policy and responsible vulnerability disclosure.
 - [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) — Community pledge and standards.
 - [LICENSE](./LICENSE) — MIT License.
-- [ADR 0001: Monorepo Structure](./docs/adr/0001-monorepo-structure.md) — Architectural decision record for workspace boundaries.
-- [SaaS Project Specification](./docs/specs/SaaS_Project_Management_Plan.md) — Product requirements and development roadmap.
