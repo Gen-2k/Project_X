@@ -119,3 +119,5 @@ pnpm test
 - [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) — Community pledge and standards.
 - [SECURITY.md](./SECURITY.md) — Security policy and vulnerability disclosure.
 - [LICENSE](./LICENSE) — MIT License.
+
+<!-- labeler test: docs touch -->
