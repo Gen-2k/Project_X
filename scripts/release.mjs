@@ -62,7 +62,9 @@ for (const area of ['apps', 'packages']) {
     try {
       run(`git tag "${tag}"`);
       run(`git push origin "${tag}"`);
-      execSync(`gh release create "${tag}" --title "${tag}" --notes-file "${notesFile}"`, { stdio: 'inherit' });
+      execSync(`gh release create "${tag}" --title "${tag}" --notes-file "${notesFile}"`, {
+        stdio: 'inherit',
+      });
       console.log(`released ${tag}`);
       released++;
     } finally {
