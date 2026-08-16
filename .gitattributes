@@ -1,4 +1,4 @@
-# Normalize line endings to LF for all text files
+﻿# Normalize line endings to LF for all text files
 # Prevents CRLF/LF conflicts on Windows and keeps Prettier's endOfLine: "lf" check green
 * text=auto eol=lf
 
@@ -8,7 +8,14 @@
 *.jpeg binary
 *.gif binary
 *.ico binary
-*.pdf binary
 *.woff binary
 *.woff2 binary
 *.ttf binary
+*.eot binary
+*.zip binary
+*.pdf binary
+
+# Lock files are machine-generated and diff as-is
+package-lock.json -diff
+pnpm-lock.yaml -diff
+yarn.lock -diff

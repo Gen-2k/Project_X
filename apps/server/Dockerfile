@@ -2,7 +2,7 @@ FROM node:22-alpine AS alpine
 
 # Set up pnpm on the alpine base
 ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
+ENV PATH="$PNPM_HOME/bin:$PATH"
 RUN corepack enable
 
 # 1. Prune the monorepo to only include the server app and its dependencies

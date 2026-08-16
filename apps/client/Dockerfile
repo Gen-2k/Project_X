@@ -1,7 +1,7 @@
 FROM node:22-alpine AS alpine
 
 ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
+ENV PATH="$PNPM_HOME/bin:$PATH"
 RUN corepack enable
 
 # 1. Prune the monorepo for the client
@@ -29,9 +29,13 @@ FROM nginxinc/nginx-unprivileged:alpine AS runner
 COPY apps/client/nginx.conf /etc/nginx/conf.d/default.conf
 
 WORKDIR /usr/share/nginx/html
+# The base image already runs as the non-root 'nginx' user, so switch to
+# root to clear the default static assets, then drop back to unprivileged.
+USER root
 # Remove default nginx static assets
 RUN rm -rf ./*
-# Copy static assets from builder
+USER nginx
+# Copy static assets from builder (COPY always runs as root)
 COPY --from=installer /app/apps/client/dist .
 
 EXPOSE 8080
