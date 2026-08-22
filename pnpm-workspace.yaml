@@ -10,3 +10,6 @@ allowBuilds:
   unrs-resolver: true
 overrides:
   js-yaml: '>=5.2.2'
+  # GHSA-ggr8-5vv4-36mx: deepmerge-ts <8 has stack exhaustion on recursive merges;
+  # pulled transitively via prisma>@prisma/config (no fixed Prisma release yet).
+  deepmerge-ts: '>=8.0.0'
