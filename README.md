@@ -1,4 +1,4 @@
-# Project X — Enterprise Monorepo Architecture
+﻿# Project X -- ProcureDesk: Vendor & Spend Request Control Center
 
 [![CI Pipeline](https://github.com/Gen-2k/Project_X/actions/workflows/pr.yml/badge.svg)](https://github.com/Gen-2k/Project_X/actions/workflows/pr.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -10,11 +10,14 @@
 ![Prisma](https://img.shields.io/badge/Prisma-7.x-black.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7+-blue.svg)
 
-> Modern full-stack monorepo demonstrating production-grade software architecture, strict quality gates, isolated package boundaries, and automated CI/CD pipelines.
+> **ProcureDesk is the active product track** -- a vendor & purchase-request control center for 20-300-person orgs. Budgets -> Requests -> Threshold-routed Approvals -> PO PDF -> Receive -> Audit. Modular monolith (NestJS + React + PostgreSQL), INR 0-first (Docker + free tiers: Neon/Upstash/R2/Resend/Render).
+> **Start here:** `docs/product/procuredesk-prd.md` (22-section client PRD, the source of truth), `docs/research/procuredesk-market-domain-research.md` (evidence, 39 sources), `docs/product/domain-model.md` + `workflows.md` + `business-rules.md` + `mvp-scope.md` + `personas.md`, `docs/reviews/procuredesk-requirements-review.md` — technical specs (ERD/API) and ADRs will be recreated step-by-step as we learn (Phase 0 Area 7).
+
+> Modern full-stack monorepo demonstrating production-grade architecture, strict quality gates, isolated package boundaries, and automated CI/CD.
 
 ---
 
-## 🏛 System Architecture
+## System Architecture
 
 ```
 Project_X/
@@ -30,91 +33,106 @@ Project_X/
 
 ---
 
-## 🚀 Quickstart Guide
+## Quickstart Guide
 
 ### Prerequisites
 
 - **Node.js**: `>= 22.13.0`
 - **pnpm**: `>= 11.0.0`
-- **Docker Desktop** (for PostgreSQL database)
+- **Docker Desktop** (for PostgreSQL, Redis, MinIO, Mailpit)
 
 ### 1. Installation & Setup
 
 ```bash
-# Clone the repository
+# Clone
 git clone https://github.com/Gen-2k/Project_X.git
 cd Project_X
 
-# Install workspace dependencies cleanly
+# Install
 pnpm install
 
-# Generate Prisma Client & internal database exports
+# Generate Prisma Client
 pnpm db:generate
 ```
 
 ### 2. Local Development
 
 ```bash
-# Start PostgreSQL via Docker Compose
+# Start infra -- Phase 0: postgres only (current docker-compose.yml:1)
+# Phase 1 adds redis + minio + mailpit per docs/product/procuredesk-prd.md:7 + docs/research/procuredesk-market-domain-research.md:11 (P2P scope)
 docker compose up postgres -d
 
-# Start client & server applications in development mode (hot-reloading)
+# After Phase 1:
+# docker compose up postgres redis minio mailpit -d
+
+# Or full stack (after Phase 1)
+# docker compose up --build
+
+# Start apps in dev (hot reload)
 pnpm dev
 ```
 
-The applications will be accessible at:
+Accessible at:
 
-- **Client App**: [http://localhost:5173](http://localhost:5173)
-- **Server API**: [http://localhost:3000/api/v1](http://localhost:3000/api/v1)
-- **Swagger API Docs**: [http://localhost:3000/api/v1/docs](http://localhost:3000/api/v1/docs)
-
----
-
-## 🛠 Available Workspace Scripts
-
-| Command            | Description                                                               |
-| ------------------ | ------------------------------------------------------------------------- |
-| `pnpm dev`         | Starts all applications in persistent development mode.                   |
-| `pnpm build`       | Compiles all packages and applications in topological dependency order.   |
-| `pnpm db:generate` | Generates Prisma client types across workspace packages.                  |
-| `pnpm lint`        | Runs ESLint flat config checks across all apps and packages.              |
-| `pnpm typecheck`   | Executes `tsc --noEmit` using TypeScript solution references.             |
-| `pnpm test`        | Runs Unit & Integration test suites (Vitest for Client, Jest for Server). |
-| `pnpm format`      | Verifies code formatting compliance via Prettier.                         |
-| `pnpm format:fix`  | Automatically formats codebase via Prettier.                              |
+- **Client**: http://localhost:5173
+- **Server API**: http://localhost:3000/api/v1
+- **Swagger**: http://localhost:3000/api/v1/docs
+- **Mailpit**: http://localhost:8025
+- **MinIO**: http://localhost:9001
 
 ---
 
-## 🧪 Testing Strategy
+## Available Workspace Scripts
 
-- **Client (`apps/client`)**: **Vitest** + **React Testing Library** + **jsdom** for component rendering and user interaction testing.
-- **Server (`apps/server`)**: **Jest** + **Supertest** for NestJS unit and E2E controller integration testing.
-
-Run tests monorepo-wide:
-
-```bash
-pnpm test
-```
-
----
-
-## 🛡 Code Quality & Git Hooks
-
-- **Commit Messages**: Enforced via **Husky** and **Commitlint** adhering to [Conventional Commits](https://www.conventionalcommits.org/).
-- **Pre-commit Formatting**: Automatically triggers **lint-staged** to format staged files via Prettier and ESLint.
-- **Continuous Integration & Delivery**: Automated pipeline on GitHub Actions (Prettier format verification, Dependency Security Audit, Knip dead-code analysis, Turborepo lint/typecheck/test/build, Postgres 15 E2E tests, Multi-stage Docker verification, Semantic PR validation, automated Changeset releases, and GHCR container publishing).
+| Command            | Description                                     |
+| ------------------ | ----------------------------------------------- |
+| `pnpm dev`         | Starts all apps in dev (persistent)             |
+| `pnpm build`       | Compiles all packages in topological order      |
+| `pnpm db:generate` | Generates Prisma client                         |
+| `pnpm lint`        | ESLint flat config                              |
+| `pnpm typecheck`   | `tsc --noEmit` via solution refs                |
+| `pnpm test`        | Unit & integration (Vitest client, Jest server) |
+| `pnpm format`      | Prettier check                                  |
+| `pnpm format:fix`  | Prettier write                                  |
 
 ---
 
-## 👤 Author & Owner
+## Testing Strategy
 
-- **Surya** ([@Gen-2k](https://github.com/Gen-2k)) — Project Owner & Lead Architect
+- **Client**: Vitest + RTL + jsdom
+- **Server**: Jest + Supertest
+- Run: `pnpm test`
 
 ---
 
-## 📄 Documentation
+## Code Quality & Git Hooks
 
-- [CONTRIBUTING.md](./CONTRIBUTING.md) — Git workflow, Conventional Commits, quality gates, and Changesets.
-- [SECURITY.md](./SECURITY.md) — Security policy and responsible vulnerability disclosure.
-- [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) — Community pledge and standards.
-- [LICENSE](./LICENSE) — MIT License.
+- **Commits**: Husky + Commitlint (Conventional Commits)
+- **Pre-commit**: lint-staged (ESLint + Prettier)
+- **CI**: GitHub Actions (format, audit, Knip, turbo lint/typecheck/test/build, Postgres E2E, Docker verify, semantic PR, Changesets, GHCR)
+
+---
+
+## Author
+
+- **Surya** ([@Gen-2k](https://github.com/Gen-2k)) — Owner & Architect
+
+---
+
+## Documentation
+
+- [ProcureDesk PRD (Client, 22 sections)](./docs/product/procuredesk-prd.md) — What the business wants and why (the source of truth)
+- [Market & Domain Research (39 sources)](./docs/research/procuredesk-market-domain-research.md) — Evidence base (P2P vs S2P, 5-8-step workflows, DOA, pain points)
+- [Domain Model](./docs/product/domain-model.md) — Business entities, relationships, lifecycle
+- [Workflows](./docs/product/workflows.md) — 8 workflows, state machine, transitions
+- [Business Rules](./docs/product/business-rules.md) — Explicit rules, configurable marks
+- [MVP Scope](./docs/product/mvp-scope.md) — MVP vs Phase 2 vs Future vs Never
+- [Personas](./docs/product/personas.md) — 5 personas (Aarav Solutions — 120 people)
+- [Requirements Review (18 sections)](./docs/reviews/procuredesk-requirements-review.md) — Deep review, verdict READY FOR PHASE 0
+
+> Technical specs (ERD, API, setup) and ADRs were removed for now per your request — they will be recreated step-by-step as we learn domain knowledge, requirements, full flow and business logic (Phase 0 Areas 3-7).
+
+- [CONTRIBUTING.md](./CONTRIBUTING.md)
+- [SECURITY.md](./SECURITY.md)
+- [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
+- [LICENSE](./LICENSE) — MIT
