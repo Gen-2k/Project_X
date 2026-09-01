@@ -107,7 +107,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Verify Client Dockerfile Build
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: apps/client/Dockerfile
@@ -116,7 +116,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Verify Server Dockerfile Build
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: apps/server/Dockerfile
